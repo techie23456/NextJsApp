@@ -12,7 +12,7 @@ export default function Home() {
 
    
     <>
-    <div><h1>Main Menu</h1></div>
+    <div><br></br><h1 className="text-center">Home Page</h1></div>
     <Link className="bg-red-400" href = "/about">About</Link><br></br>
     <button className="bg-red-400" onClick={()=>navigate("/about")}>About</button>
     </>
