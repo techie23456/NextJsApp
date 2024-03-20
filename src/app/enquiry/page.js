@@ -9,6 +9,18 @@ function Enquiry() {
   const [Fname,setFname]  = useState("");
   const [Lname,setLname] =  useState("");
   const [contact,setContact] =  useState("");
+  const [photo,setPhoto] =  useState("");
+
+  const handleChange =(e) =>{
+    const data = new FileReader();
+    data.addEventListener('load', () =>
+    { 
+        setPhoto(data.result);
+    })
+
+    data.readAsDataURL(e.target.files[0])
+
+  };
 
 
   const handleAddData = (e) =>{
@@ -16,16 +28,21 @@ function Enquiry() {
 
       e.preventDefault();
       const usersRef = ref(database,'users');
+
+     /* The Push() method generates a unique key every time a new child is added to the specified Firebase reference*/
+
       const newDataRef = push(usersRef);
       set(newDataRef,{
         Fname: Fname,
         Lname: Lname,
         contact: contact,
+        photo: photo,
       });
 
       setFname("");
       setLname("");
       setContact("");
+      setPhoto("");
 
       alert("data inserted ");
 
@@ -40,7 +57,8 @@ function Enquiry() {
     <div>
       <br></br><h1 className='text-center'>Enquiry Page</h1>
 
-      <form className="login" action={handleAddData}>
+      <form className="login">
+
   <h2>💫💫💫💫💫Please Enter your Name and Contact :💫💫💫💫💫</h2>
   
      <input type="text" placeholder="First Name"
@@ -58,8 +76,14 @@ function Enquiry() {
    onChange = {(e) => setContact(e.target.value)}
   />
 
-    <button onClick={handleAddData}
-             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"> 💫💫💫💫💫💫💫Save💫💫💫💫💫💫 </button>
+   <input type="file" placeholder="upload your photo"
+    
+   onChange = {handleChange}
+  />
+
+  
+
+     <input type ="submit" value ="Submit" onClick={handleAddData} />        
 
      </form>
     </div>

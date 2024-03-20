@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <h1 className="text-center bg-black text-white"><Link href="/home">Home</Link> | <Link href="/about">About Us</Link> | <Link href="/signIn">SignIn</Link> | <Link href="/signUp">SignUp</Link> | <Link href="/enquiry">Enquiry</Link></h1>
+        <h1 className="text-center bg-black text-white"><Link href="/home">Home</Link> | <Link href="/about">About Us</Link> | <Link href="/signIn">SignIn</Link> | <Link href="/signUp">SignUp</Link> | <Link href="/enquiry">Enquiry</Link> |  <Link href="/list">Employee Details </Link> | <Link href="/imageUpload">Image Upload </Link> </h1>
         
         {children}</body>
     </html>

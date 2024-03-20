@@ -1,83 +1,68 @@
-'use client'
+"use client";
 
-import {database} from "./firebaseConfig";
-import { push ,ref,set } from "firebase/database";
-import React ,{useState,useEffect} from "react"  
+import { useState, useEffect } from "react";
 
-export default function Home() {
+import app from "./config.js";
 
-  const [name,settName]  = useState("");
-  const [email,setEmail] =  useState("");
+import { getAuth } from "firebase/auth";
 
-  const handleAddData = () =>{
-    try{
+import { useRouter } from "next/navigation";
 
-      console.log("#####")
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import Dashboard from "./dashboard/page.js";
 
-      const usersRef = ref(database,'users');
-      const newDataRef = push(usersRef);
+const Home = () => {
+const [user, setUser] = useState(null);
 
-      console.log("#####$$$",newDataRef)
+const router = useRouter();
 
-      set(newDataRef,{
-        name: name,
-        email: email,
-      });
+useEffect(() => {
 
-      
+const auth = getAuth(app);
 
-      settName("");
-      setEmail("");
-
-      alert("data inserted ");
-
-    } catch (error)
-    {
-      console.error 
-    }
-    
-  }
-  
-
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-
-      <h1>Add Data to firestore</h1>
-
-     
-         <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
-              Name:
-            </label>
-
-            <input 
-            type="text"
-            id="name"
-            className=" w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-            value = {name}
-            onChange = {(e) => settName(e.target.value)}
-            />
-         </div>
-
-
-         <div className="mb-4">
-            <label htmlFor="mail" className="block text-gray-700 font-bold mb-2">
-             Mail:
-            </label>
-
-            <input 
-            type="text"
-            id="mail"
-            className=" w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-            value = {email}
-            onChange = {(e) => setEmail(e.target.value)}
-            />
-         </div>
-
-         <div className="text-center">
-          <button onClick={handleAddData}
-             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"> Save</button>
-         </div>
-        </main>
-  );
+const unsubscribe = auth.onAuthStateChanged((user)=>{
+if(user) {
+     setUser(user);
 }
+else{
+ setUser(null);
+}
+
+});
+
+return () => unsubscribe();
+},[]);
+
+
+const SignInWithGoogle = async () => {
+
+const auth = getAuth(app);
+
+const provider = new GoogleAuthProvider();
+
+try {
+
+await signInWithPopup(auth, provider);
+router.push("/dashboard");
+}
+
+catch(error) {
+console.error("error signing in with Google",error.message);
+}
+};
+
+return (
+<div classname ="flex flex-col items-center justify-renter h-screen">
+{ user ? (
+
+<Dashboard />
+) : (
+
+<button onClick ={SignInWithGoogle}
+classname ="bg-blue-500 hover :bg-blue-700 text-white font-bold py-2 px-4 rounded">
+Sign In with Google</button>
+)}
+</div>);
+}
+
+export default Home;
